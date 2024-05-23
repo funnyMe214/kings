@@ -1,0 +1,44 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.navbar{
+border-bottom: 2px solid #ffc72c;
+}
+h2{
+    color: #ffc72c;
+}
+.card:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s;
+}
+.card-title{
+    font-size: 20px;
+    font-weight: bold;
+    color: goldenrod;
+    text-align: center;
+}
+.card a{
+    text-decoration: none;
+}
+.card h5{
+    margin-top: -22px;
+}
+#game-image{
+    width: 95%;
+    height: 80%;
+    object-fit:cover;
+    margin: 3%;
+}
+.games-section h2, .countdown-section h2 {
+    margin-bottom: 20px;
+}
+
+footer p {
+    margin: 0;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
