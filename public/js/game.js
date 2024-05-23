@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const title = params.get('title');
 
     if (title) {
-        fetch(`http://localhost:3000/api/game/${title}`)
+        fetch(`http://kingscasino.vercel.app/api/game/${title}`)
             .then(response => response.json())
             .then(game => {
                 document.getElementById('game-title').innerText = game.title;
