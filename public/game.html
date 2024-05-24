@@ -7,9 +7,68 @@
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Add your CSS styles here */
+        .chat-container {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 10px;
+            width: 300px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+
+        }
+
+        .chat-header {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .chat-messages {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .chat-input {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            flex-wrap: wrap;
+            overflow: hidden;
+        }
+
+        .chat-input input[type="text"] {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 8px;
+        }
+
+        .chat-input button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+        #messageInput{
+            width: 90%;
+            overflow-wrap: normal;
+        }
+        #closeChat{
+            margin-left: 90%;
+            margin-top: -50%;
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
     <!-- Navigation Bar -->
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
@@ -20,7 +79,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto ">
+                <ul class="navbar-nav ml-auto">
                     <li class="nav-item mx-2"><a class="nav-link" href="offers.html" target="_blank">Offers</a></li>
                     <li class="nav-item mx-2"><a class="nav-link" href="refer-a-player.html" target="_blank">Refer a Player</a></li>
                     <li class="nav-item mx-2"><a class="nav-link" href="referred-by-a-player.html" target="_blank">Referred by a Player</a></li>
@@ -40,12 +99,45 @@
                 </div>
                 <div class="col-md-6">
                     <p id="game-description">Game description will be loaded here...</p>
+                    <a id="game-download" href="" class="btn btn-primary mb-3" target="_blank">Download Game</a>
+                    <div class="d-grid gap-2">
+                        <button id="create-account" class="btn btn-secondary mb-2">Create/Know Your Account</button>
+                        <button id="deposit" class="btn btn-secondary mb-2">Deposit</button>
+                        <button id="cashout" class="btn btn-secondary mb-2">Cashout/Redeem</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-md-6">
+                    <h3 class="text-center">Offers</h3>
+                    <img id="offers-image" src="" alt="Offers Image" class="img-fluid" width="auto" height="300px">
+                </div>
+                <div class="col-md-6">
+                    <h3 class="text-center">Cashout Rules</h3>
+                    <img id="cashout-rules-image" src="" alt="Cashout Rules Image" class="img-fluid">
                 </div>
             </div>
         </section>
     </main>
+
+    <!-- Chat Interface -->
+    <div class="chat-container" id="chatContainer">
+        <div class="chat-header">
+            <h4>Chat Interface</h4>
+            <button id="closeChat"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <!-- Chat messages will be displayed here -->
+        </div>
+        <div class="chat-input">
+            <input type="file" id="fileInput">
+            <input type="text" id="messageInput" placeholder="Type your message...">
+            <button id="sendButton"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
     <!-- Footer -->
-    <footer class="bg-dark text-white text-center py-3" style="margin-top: 80vh;">
+    <footer class="bg-dark text-white text-center py-3">
         <p>Follow us on 
             <a href="https://www.facebook.com/KiingTreasure" target="_blank" class="text-white">Facebook</a>, 
             <a href="#" target="_blank" class="text-white">Twitter</a>, 
@@ -58,5 +150,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="js/game.js"></script>
+
+    
 </body>
 </html>
