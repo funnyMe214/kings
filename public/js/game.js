@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const gameId = params.get('id');
 
+    
     if (gameId) {
         fetch('/utils/games.json')
             .then(response => {
