@@ -69,6 +69,7 @@ document.getElementById('sendButton').addEventListener('click', () => {
 
         // Save the message to the server
         sendMessageToServer(message);
+        
     }
 });
 
