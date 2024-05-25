@@ -1,10 +1,17 @@
 const { Server } = require("ws");
 const saveMessage = require('./save-message');
+const { createServer } = require('http');
 
-const server = new Server({ noServer: true });
 const connections = new Set();
 
-server.on("connection", (socket) => {
+const server = createServer((req, res) => {
+    res.writeHead(404);
+    res.end();
+});
+
+const wss = new Server({ server });
+
+wss.on("connection", (socket) => {
     connections.add(socket);
 
     socket.on("message", (message) => {
@@ -27,19 +34,4 @@ server.on("connection", (socket) => {
     });
 });
 
-module.exports = (req, res) => {
-    if (res.socket.server.ws) {
-        res.end();
-        return;
-    }
-
-    res.socket.server.ws = server;
-
-    res.socket.server.on("upgrade", (req, socket, head) => {
-        server.handleUpgrade(req, socket, head, (ws) => {
-            server.emit("connection", ws, req);
-        });
-    });
-
-    res.end();
-};
+module.exports = server;

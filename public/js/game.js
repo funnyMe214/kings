@@ -42,6 +42,7 @@ function displayErrorMessage(message) {
 }
 
 
+
 // WebSocket setup
 const socket = new WebSocket('wss://kingscasino.vercel.app/api/websocket');
 
