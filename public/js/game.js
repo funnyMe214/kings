@@ -44,7 +44,7 @@ function displayErrorMessage(message) {
 
 
 // WebSocket setup
-const socket = new WebSocket('wss://kingscasino.vercel.app/api/websocket');
+const socket = new WebSocket('wss://kingscasino.vercel.app/api/websocket.js');
 
 socket.addEventListener('open', () => {
     console.log('WebSocket connection established');
