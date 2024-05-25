@@ -2,9 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const gameId = params.get('id');
 
-    
     if (gameId) {
-        fetch('/utils/games.json')
+        fetch('/api/games')
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -41,6 +40,7 @@ function displayErrorMessage(message) {
     document.getElementById('offers-image').src = '';
     document.getElementById('cashout-rules-image').src = '';
 }
+
 
 // WebSocket setup
 const socket = new WebSocket('wss://kingscasino.vercel.app/api/websocket');
