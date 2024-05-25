@@ -87,7 +87,7 @@ function displayMessage(sender, message) {
 }
 
 function sendMessageToServer(message) {
-    fetch('/api/save-message', {
+    fetch('/api/save-message.js', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
