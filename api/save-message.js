@@ -1,43 +1,24 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
-module.exports = (req, res) => {
-    // Set CORS headers
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+const saveMessage = async (message) => {
+  const messagesFilePath = path.resolve('./utils/messages.json');
+  const messages = JSON.parse(fs.readFileSync(messagesFilePath, 'utf-8'));
 
-    if (req.method === 'OPTIONS') {
-        res.writeHead(200);
-        res.end();
-        return;
-    }
+  messages.push(message);
 
-    let body = '';
-    req.on('data', chunk => {
-        body += chunk.toString();
-    });
+  fs.writeFileSync(messagesFilePath, JSON.stringify(messages, null, 2));
+};
 
-    req.on('end', () => {
-        try {
-            const { message } = JSON.parse(body);
+export default async (req, res) => {
+  if (req.method === 'POST') {
+    const { message, sender } = req.body;
 
-            const filePath = path.resolve('./utils/messages.json');
-            let messages = [];
-            if (fs.existsSync(filePath)) {
-                const messagesData = fs.readFileSync(filePath, 'utf8');
-                messages = JSON.parse(messagesData);
-            }
+    await saveMessage({ message, sender });
 
-            messages.push({ message });
-            fs.writeFileSync(filePath, JSON.stringify(messages, null, 2));
-
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ success: true }));
-        } catch (error) {
-            console.error('Error saving message:', error);
-            res.writeHead(500, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ success: false, error: 'Internal server error' }));
-        }
-    });
+    res.status(200).json({ status: 'Message saved' });
+  } else {
+    res.setHeader('Allow', ['POST']);
+    res.status(405).end('Method Not Allowed');
+  }
 };

@@ -41,17 +41,17 @@ function displayErrorMessage(message) {
     document.getElementById('cashout-rules-image').src = '';
 }
 
-
-// WebSocket setup
-const socket = new WebSocket('wss://kingscasino.vercel.app/api/websocket');
-
-socket.addEventListener('open', () => {
-    console.log('WebSocket connection established');
+// Pusher setup
+const pusher = new Pusher('f8f2c6843ea58b0751b0', {
+  cluster: 'ap1'
 });
 
-socket.addEventListener('message', event => {
-    const message = JSON.parse(event.data);
-    displayMessage('admin', message.content); // Ensure the correct field is accessed
+// Subscribe to the 'chat' channel
+const channel = pusher.subscribe('chat');
+
+// Listen for new messages
+channel.bind('message', function(data) {
+    displayMessage(data.sender, data.message);
 });
 
 document.getElementById('sendButton').addEventListener('click', () => {
@@ -65,15 +65,26 @@ document.getElementById('sendButton').addEventListener('click', () => {
         // Clear the input field
         messageInput.value = '';
 
-        // Send the message to the WebSocket server
-        socket.send(JSON.stringify({ type: 'chat', content: message, sender: 'user' }));
+        // Send the message to the server
+        fetch('/api/pusher', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message, sender: 'user' })
+        })
+        .then(response => response.text())
+        .then(data => {
+            console.log('Message sent:', data);
+        })
+        .catch(error => {
+            console.error('Error sending message:', error);
+        });
 
         // Save the message to the server
         sendMessageToServer(message);
     }
 });
-
-
 
 function displayMessage(sender, message) {
     const chatMessages = document.getElementById('chatMessages');
@@ -85,13 +96,14 @@ function displayMessage(sender, message) {
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to the bottom
 }
+
 function sendMessageToServer(message) {
     fetch('/api/save-message', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ message }) // Ensure the message is stringified correctly
+        body: JSON.stringify({ message, sender: 'user' }) // Ensure the message is stringified correctly
     })
     .then(response => response.json())
     .then(data => {
@@ -101,8 +113,6 @@ function sendMessageToServer(message) {
         console.error('Error saving message:', error);
     });
 }
-
-
 
 function presetMessage(message) {
     toggleChat();
