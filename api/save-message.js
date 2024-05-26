@@ -20,7 +20,7 @@ module.exports = (req, res) => {
 
     req.on('end', () => {
         try {
-            const message = JSON.parse(body);
+            const { message } = JSON.parse(body);
 
             const filePath = path.resolve('./utils/messages.json');
             let messages = [];
@@ -29,7 +29,7 @@ module.exports = (req, res) => {
                 messages = JSON.parse(messagesData);
             }
 
-            messages.push(message);
+            messages.push({ message });
             fs.writeFileSync(filePath, JSON.stringify(messages, null, 2));
 
             res.writeHead(200, { 'Content-Type': 'application/json' });

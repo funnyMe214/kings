@@ -1,17 +1,10 @@
 const { Server } = require("ws");
-const saveMessage = require('./save-message');
-const { createServer } = require('http');
+const saveMessage = require('./save-message'); // Assuming this module exports the message saving logic
 
+const server = new Server({ noServer: true });
 const connections = new Set();
 
-const server = createServer((req, res) => {
-    res.writeHead(404);
-    res.end();
-});
-
-const wss = new Server({ server });
-
-wss.on("connection", (socket) => {
+server.on("connection", (socket) => {
     connections.add(socket);
 
     socket.on("message", (message) => {
@@ -34,4 +27,24 @@ wss.on("connection", (socket) => {
     });
 });
 
-module.exports = server;
+module.exports = (req, res) => {
+    // Set CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+    if (res.socket.server.ws) {
+        res.end();
+        return;
+    }
+
+    res.socket.server.ws = server;
+
+    res.socket.server.on("upgrade", (req, socket, head) => {
+        server.handleUpgrade(req, socket, head, (ws) => {
+            server.emit("connection", ws, req);
+        });
+    });
+
+    res.end();
+};

@@ -42,9 +42,8 @@ function displayErrorMessage(message) {
 }
 
 
-
 // WebSocket setup
-const socket = new WebSocket('wss://kingscasino.vercel.app/api/websocket.js');
+const socket = new WebSocket('wss://kingscasino.vercel.app/api/websocket');
 
 socket.addEventListener('open', () => {
     console.log('WebSocket connection established');
@@ -52,13 +51,13 @@ socket.addEventListener('open', () => {
 
 socket.addEventListener('message', event => {
     const message = JSON.parse(event.data);
-    displayMessage('admin', message.message);
+    displayMessage('admin', message.content); // Ensure the correct field is accessed
 });
 
 document.getElementById('sendButton').addEventListener('click', () => {
     const messageInput = document.getElementById('messageInput');
     const message = messageInput.value.trim();
-    
+
     if (message) {
         // Display the message in the chat
         displayMessage('user', message);
@@ -67,13 +66,14 @@ document.getElementById('sendButton').addEventListener('click', () => {
         messageInput.value = '';
 
         // Send the message to the WebSocket server
-        socket.send(JSON.stringify({ message }));
+        socket.send(JSON.stringify({ type: 'chat', content: message, sender: 'user' }));
 
         // Save the message to the server
         sendMessageToServer(message);
-        
     }
 });
+
+
 
 function displayMessage(sender, message) {
     const chatMessages = document.getElementById('chatMessages');
@@ -85,14 +85,13 @@ function displayMessage(sender, message) {
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to the bottom
 }
-
 function sendMessageToServer(message) {
     fetch('/api/save-message', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ message })
+        body: JSON.stringify({ message }) // Ensure the message is stringified correctly
     })
     .then(response => response.json())
     .then(data => {
@@ -102,6 +101,8 @@ function sendMessageToServer(message) {
         console.error('Error saving message:', error);
     });
 }
+
+
 
 function presetMessage(message) {
     toggleChat();
