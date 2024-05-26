@@ -41,6 +41,7 @@ function displayErrorMessage(message) {
     document.getElementById('cashout-rules-image').src = '';
 }
 
+
 // Pusher setup
 const pusher = new Pusher('f8f2c6843ea58b0751b0', {
   cluster: 'ap1'
