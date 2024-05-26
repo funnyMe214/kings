@@ -1,9 +1,9 @@
 const fs = require('fs');
+const path = require('path');
 
-
-function saveMessage(req, res) {
+module.exports = (req, res) => {
     // Set CORS headers
-    res.setHeader('Access-Control-Allow-Origin', '*'); // Allow all origins, adjust as needed
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
@@ -22,20 +22,22 @@ function saveMessage(req, res) {
         try {
             const message = JSON.parse(body);
 
-            // Save the message to messages.json
-            const messages = fs.readFileSync('./utils/messages.json');
-            const parsedMessages = JSON.parse(messages);
-            parsedMessages.push(message);
-            fs.writeFileSync('./utils/messages.json', JSON.stringify(parsedMessages));
+            const filePath = path.resolve('./utils/messages.json');
+            let messages = [];
+            if (fs.existsSync(filePath)) {
+                const messagesData = fs.readFileSync(filePath, 'utf8');
+                messages = JSON.parse(messagesData);
+            }
 
-            res.writeHead(200);
+            messages.push(message);
+            fs.writeFileSync(filePath, JSON.stringify(messages, null, 2));
+
+            res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ success: true }));
         } catch (error) {
             console.error('Error saving message:', error);
-            res.writeHead(500);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ success: false, error: 'Internal server error' }));
         }
     });
-}
-
-module.exports = saveMessage;
+};
